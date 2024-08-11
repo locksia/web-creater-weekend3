@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부루마블 초안</title>
+    </script>
+    <style>
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 80px);
+            grid-template-rows: repeat(8, 80px);
+            gap: 2px;
+            width: 640px;
+            height: 640px;
+        }
+        .cell {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border-radius: 10%;
+        }
+        .horse1 {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .horse2 {
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            border-radius: 50%;
+        }
+        .box{
+            border: 5px solid navy;
+            width: 300px;
+            height: 100px;
+        }
+        .cellBox {
+            position: relative;
+            left: 0px;
+            top: 0px;
+            display: block;
+            float: left;
+            box-sizing: border-box;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+        .cellBox ul {
+            display: block;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            border: 0px solid red;
+            padding: 0;
+            margin: 0;
+        }
+        .cellBox ul li {
+            border: 1px solid orange;
+            width: 100px;
+            height: 100px;
+            list-style: none;
+            text-align: center;
+            line-height: 100px;
+            box-sizing: border-box;
+        }
+        #container {
+            display: flex;
+            justify-content: flex-start;
+        }
+        .player{
+            margin-right : 20px;
+        }
+        .name{
+            font-size: 28px;
+        }
+        #namestyle1{
+            color: red;
+        }
+        #namestyle2{
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>브루마블 초안</h1>
+    <hr>
+    <div id="container">
+        <div id="player1" class="player">
+            <span class="name" id="namestyle1">player 1</span>
+            <span>Score : </span>
+            <span id="score1" class="score">0</span>
+            <br>
+            <div id="box1" class="box">
+            </div>
+            <br>
+            <textarea name="area1" id="area1"></textarea>
+            <button id="startBtn1">START</button><button id="stopBtn1">STOP</button>
+        </div>
+        <div id="player2" class="player">
+            <span class="name" id="namestyle2">player 2</span>
+            <span>Score : </span>
+            <span id="score2" class="score">0</span>
+            <br>
+            <div id="box2" class="box">
+            </div>
+            <br>
+            <textarea name="area2" id="area2"></textarea>
+            <button id="startBtn2">START</button><button id="stopBtn2">STOP</button>
+        </div>
+    </div>
+    <hr>
+    <div id="board">
+        <div class="cell" id="cell-0"></div>
+        <div class="cell" id="cell-1"></div>
+        <div class="cell" id="cell-2"></div>
+        <div class="cell" id="cell-3"></div>
+        <div class="cell" id="cell-4"></div>
+        <div class="cell" id="cell-5"></div>
+        <div class="cell" id="cell-6"></div>
+        <div class="cell" id="cell-7"></div>
+    
+        <div class="cell" id="cell-27"></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="cell" id="cell-8"></div>
+    
+        <div class="cell" id="cell-26"></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="cell" id="cell-9"></div>
+    
+        <div class="cell" id="cell-25"></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="cell" id="cell-10"></div>
+    
+        <div class="cell" id="cell-24"></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="cell" id="cell-11"></div>
+    
+        <div class="cell" id="cell-23"></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="cell" id="cell-12"></div>
+    
+        <div class="cell" id="cell-22"></div>
+        <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="cell" id="cell-13"></div>
+
+        <div class="cell" id="cell-21"></div>
+        <div class="cell" id="cell-20"></div>
+        <div class="cell" id="cell-19"></div>
+        <div class="cell" id="cell-18"></div>
+        <div class="cell" id="cell-17"></div>
+        <div class="cell" id="cell-16"></div>
+        <div class="cell" id="cell-15"></div>
+        <div class="cell" id="cell-14"></div>
+    </div>
+<script>
+    let player1_Position = 0;
+    let player2_Position = 0;
+    let player1_Score = 0;
+    let player2_Score = 0;
+
+    const playerPiece1 = document.createElement('div');
+    playerPiece1.className = 'horse1';
+    document.getElementById('cell-' + player1_Position).appendChild(playerPiece1);
+
+    const playerPiece2 = document.createElement('div');
+    playerPiece2.className = 'horse2';
+    document.getElementById('cell-' + player2_Position).appendChild(playerPiece2);
+
+    function Box() { }
+    Box.prototype.init = function(text) {
+        this.cellBox = document.createElement("div");
+        this.elementUl = document.createElement("ul");
+        for(var i=0; i<10; i++) {
+            this.elementLi = document.createElement("li");
+            this.elementLi.innerText = i;
+            this.elementUl.appendChild(this.elementLi);
+        }
+        this.cellBox.appendChild(this.elementUl);
+        this.cellBox.setAttribute("class", "cellBox");
+        return this.cellBox;
+    }
+    Box.prototype.start = function(speed) {
+        this.y = 0;
+        this.intervalRef = setInterval(() => {
+            this.y -= 10;
+            this.elementUl.style.top = this.y + "px";
+            if(this.y <= -400) {
+                this.y = 0;
+            }
+        }, speed);
+    }
+    Box.prototype.stop = function() {
+    clearInterval(this.intervalRef);
+    this.yPos = Math.floor(this.y / 100);
+    console.log(this.yPos)
+    this.y = this.yPos * 100;
+    this.elementUl.style.top = this.y + "px";
+    }
+
+
+    const divBox1 = document.querySelector("#box1");
+    const boxArr1 = [
+        new Box(), new Box(), new Box(),
+    ];
+    for(var i=0; i<3; i++) {
+        const newBox = boxArr1[i].init();
+        divBox1.appendChild(newBox);
+    }
+
+    const textarea1 = document.querySelector('#area1');
+    const startBtn1 = document.querySelector("#startBtn1");
+    const stopBtn1 = document.querySelector("#stopBtn1");
+    const score1 = document.querySelector("#score1");
+    const score2 = document.querySelector('#score2')
+    startBtn1.addEventListener('click', function(event) {
+        boxArr1.forEach(function(box){
+            box.start(Math.floor(5 + Math.random()*20));
+        })
+    });
+    stopBtn1.addEventListener('click', function(event) {
+        textarea1.value = "";
+        setTimeout(() => boxArr1[0].stop(), 300);
+        setTimeout(() => boxArr1[1].stop(), 600);
+        setTimeout(() => {boxArr1[2].stop();
+        textarea1.value = parseInt(boxArr1[0].yPos) + parseInt(boxArr1[1].yPos) + parseInt(boxArr1[2].yPos);
+        
+        let newPosition1 = player1_Position + parseInt(textarea1.value)*-1;
+        if (newPosition1 >= 28) {
+            newPosition1 -= 28;
+            player1_Score++;
+            document.getElementById('score1').textContent = player1_Score;
+
+        }
+        document.getElementById('cell-' + player1_Position).removeChild(playerPiece1);
+        document.getElementById('cell-' + newPosition1).appendChild(playerPiece1);
+        player1_Position = newPosition1;
+        },900);
+    });
+
+    const divBox2 = document.querySelector("#box2");
+    const boxArr2 = [
+        new Box(), new Box(), new Box(),
+    ];
+    for(var i=0; i<3; i++) {
+        const newBox = boxArr2[i].init();
+        divBox2.appendChild(newBox);
+    }
+
+    const textarea2 = document.querySelector('#area2');
+    const startBtn2 = document.querySelector("#startBtn2");
+    const stopBtn2 = document.querySelector("#stopBtn2");
+    startBtn2.addEventListener('click', function(event) {
+        boxArr2.forEach(function(box){
+            box.start(Math.floor(5 + Math.random()*20));
+        })
+    });
+    stopBtn2.addEventListener('click', function(event) {
+        textarea2.value = "";
+        setTimeout(function(){boxArr2[0].stop()},300);
+        setTimeout(function(){boxArr2[1].stop()},600);
+        setTimeout(function(){boxArr2[2].stop();
+        textarea2.value = parseInt(boxArr2[0].yPos) + parseInt(boxArr2[1].yPos) + parseInt(boxArr2[2].yPos);
+
+        let newPosition2 = player2_Position + parseInt(textarea2.value)*-1;
+        if (newPosition2 >= 28) {
+            newPosition2 -= 28;
+            player2_Score++;
+            $('.modal').modal('show');
+            document.getElementById('score2').textContent = player2_Score;
+        }
+        document.getElementById('cell-' + player2_Position).removeChild(playerPiece2);
+        document.getElementById('cell-' + newPosition2).appendChild(playerPiece2);
+        player2_Position = newPosition2;
+        },900);
+    });
+</script>
+</body>
+</html>
